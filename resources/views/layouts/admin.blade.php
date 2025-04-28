@@ -1,23 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>@yield('title', 'Admin Panel')</title>
-  <link rel="stylesheet" href="{{ asset('adminlte/css/adminlte.min.css') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <title>@yield('title', 'Chiêm Tinh Vui - Admin')</title>
+
+    {{-- Icon + Font --}}
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/icon.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('image/icon.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    {{-- Tailwind & Vite --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        body {
+            background: linear-gradient(to bottom right, #5b21b6, #312e81); /* Tím → xanh đậm */
+            min-height: 100vh;
+            color: white;
+        }
+    </style>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
 
-  @include('layouts.navbar')
-  @include('layouts.sidebar')
+<body class="flex">
 
-  <div class="content-wrapper p-4">
-    @yield('content')
-  </div>
+    {{-- Sidebar --}}
+    @include('layouts.sidebar')
 
-</div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ asset('adminlte/js/adminlte.min.js') }}"></script>
+    {{-- Nội dung --}}
+    <div class="flex-1 p-6 ml-64">
+        @yield('content')
+    </div>
+
 </body>
 </html>
