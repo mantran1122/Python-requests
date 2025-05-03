@@ -21,6 +21,9 @@ use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Admin\LlmConfigurationController;
 use \App\Http\Controllers\Admin\ChatHistoryController;
 use \App\Http\Controllers\Admin\ChatChartHistoryController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\AstrologyController;
+
 
 Route::get('/', function () {
     return view('home');
@@ -43,6 +46,10 @@ Route::middleware(['auth', 'is_admin'])->prefix('dashboard')->name('admin.')->gr
 
     Route::resource('chat-histories', ChatHistoryController::class)->only(['index']);
     Route::get('/chat-chart-histories', [ChatChartHistoryController::class, 'index'])->name('chat-chart-histories.index');
+
+    Route::get('admin/settings', [SettingController::class,'edit'])->name('settings.edit');
+    Route::post('admin/settings', [SettingController::class,'update'])->name('settings.update');
+     
 
 });
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -81,5 +88,7 @@ Route::get('/api/user/coins', function () {
     ]);
 })->middleware('auth')->name('api.getCoins');
 
+Route::get('/astrology/details', [AstrologyController::class, 'details'])
+     ->name('astrology.details');
 
 require __DIR__.'/auth.php';

@@ -15,79 +15,88 @@
   <link rel="icon" href="{{ asset('image/icon.png') }}" type="image/png">
 
   <style>
-    body {
-      background: linear-gradient(to bottom right, #5b21b6, #3b0764);
-      font-family: 'Inter', sans-serif;
-      color: white;
-    }
-    .sidebar-link:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-    }
+    /* Sidebar active link */
     .sidebar-link.active {
-      background: linear-gradient(to right, #8b5cf6, #7c3aed);
-      color: white;
+      background-color: #374151; /* bg-gray-700 */
+      color: #000000;            /* black */
       font-weight: bold;
-      border-radius: 12px;
+      border-radius: 0.5rem;     /* rounded-lg */
     }
+
+    /* Sidebar hover */
+    .sidebar-link:hover {
+      background-color: rgba(55, 65, 81, 0.5); /* bg-gray-700/50 */
+      color: #000000;
+      border-radius: 0.5rem;
+    }
+
+    /* Topbar */
     .topbar {
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: blur(10px);
-    }
-    #chartTraCuu, #chartUser {
-      width: 100% !important;
-      height: 320px !important;
+      background-color: rgba(243, 244, 246, 0.5); /* gray-100/50 */
+      border-bottom: 1px solid #E5E7EB; /* gray-200 */
     }
   </style>
 </head>
-<body class="min-h-screen flex">
+
+<body class="min-h-screen flex bg-gray-200 text-gray-900 font-sans">
 
   {{-- Sidebar --}}
-  <aside class="w-64 bg-gradient-to-b from-indigo-900 to-indigo-700 p-4 flex flex-col gap-4">
-    <div class="text-center text-2xl font-bold mb-6">
-    🔮 Chiêm Tinh Admin
+  <aside class="w-64 bg-gray-200 p-6 flex flex-col space-y-4">
+    <div class="text-center text-2xl font-bold text-gray-900 mb-6">
+      🔮 Chiêm Tinh Admin
     </div>
-    <nav class="flex flex-col gap-2">
-      <a href="{{ route('admin.dashboard') }}" class="sidebar-link px-4 py-3 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-        <i class="fas fa-home mr-2"></i> Dashboard
+    <nav class="flex-1 flex flex-col space-y-2">
+      <a href="{{ route('admin.dashboard') }}"
+         class="sidebar-link px-4 py-3 flex items-center space-x-3 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+        <i class="fas fa-home text-gray-900"></i>
+        <span>Dashboard</span>
       </a>
-      <a href="{{ route('admin.users.index') }}" class="sidebar-link px-4 py-3 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-        <i class="fas fa-users mr-2"></i> Người dùng
+      <a href="{{ route('admin.users.index') }}"
+         class="sidebar-link px-4 py-3 flex items-center space-x-3 {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+        <i class="fas fa-users text-gray-900"></i>
+        <span>Người dùng</span>
       </a>
-      <a href="{{ route('admin.zodiac_signs.index') }}" class="sidebar-link px-4 py-3 {{ request()->routeIs('admin.zodiac_signs.*') ? 'active' : '' }}">
-        <i class="fas fa-star mr-2"></i> Cung hoàng đạo
+      <a href="{{ route('admin.zodiac_signs.index') }}"
+         class="sidebar-link px-4 py-3 flex items-center space-x-3 {{ request()->routeIs('admin.zodiac_signs.*') ? 'active' : '' }}">
+        <i class="fas fa-star text-gray-900"></i>
+        <span>Cung hoàng đạo</span>
       </a>
-      <a href="{{ route('admin.astrology_results.index') }}" class="sidebar-link px-4 py-3 {{ request()->routeIs('admin.astrology_results.*') ? 'active' : '' }}">
-        <i class="fas fa-magic mr-2"></i> Kết quả chiêm tinh
+      <a href="{{ route('admin.astrology_results.index') }}"
+         class="sidebar-link px-4 py-3 flex items-center space-x-3 {{ request()->routeIs('admin.astrology_results.*') ? 'active' : '' }}">
+        <i class="fas fa-magic text-gray-900"></i>
+        <span>Kết quả chiêm tinh</span>
       </a>
-      <a href="{{ route('admin.llm-configurations.index') }}" class="sidebar-link px-4 py-3 {{ request()->routeIs('admin.llm-configurations.*') ? 'active' : '' }}">
-        <i class="fas fa-cogs mr-2"></i> Cấu hình LLM
+      <a href="{{ route('admin.llm-configurations.index') }}"
+         class="sidebar-link px-4 py-3 flex items-center space-x-3 {{ request()->routeIs('admin.llm-configurations.*') ? 'active' : '' }}">
+        <i class="fas fa-cogs text-gray-900"></i>
+        <span>Cấu hình LLM</span>
       </a>
     </nav>
-    <div class="mt-auto">
-      <form action="{{ route('logout') }}" method="POST" class="text-center">
-        @csrf
-        <button type="submit" class="w-full mt-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg font-semibold">
-          <i class="fas fa-sign-out-alt mr-1"></i> Đăng xuất
-        </button>
-      </form>
-    </div>
+    <form action="{{ route('logout') }}" method="POST" class="mt-auto">
+      @csrf
+      <button type="submit"
+              class="w-full px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold flex items-center justify-center space-x-2">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Đăng xuất</span>
+      </button>
+    </form>
   </aside>
 
   {{-- Main content --}}
   <div class="flex-1 flex flex-col">
     {{-- Topbar --}}
-    <header class="topbar p-4 flex justify-between items-center text-white">
-      <h1 class="text-2xl font-bold">@yield('title', 'Chiêm Tinh Admin')</h1>
+    <header class="topbar p-4 flex justify-between items-center text-gray-900">
+      <h1 class="text-2xl font-bold">@yield('title', 'Dashboard')</h1>
+      {{-- icons etc. --}}
     </header>
 
-    <main class="flex-1 p-6 overflow-y-auto">
+    {{-- Page Content --}}
+    <main class="flex-1 p-6 bg-gray-50 overflow-y-auto">
       @yield('content')
     </main>
   </div>
 
-  {{-- Chèn script --}}
+  {{-- Scripts --}}
   @stack('scripts')
-
 </body>
 </html>

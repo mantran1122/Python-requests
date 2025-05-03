@@ -2,12 +2,16 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
             {{-- Logo + tên app --}}
-            <div class="flex items-center space-x-3">
-                <a href="{{ route('home') }}">
-                    <img src="/image/astro-icon.png" alt="Logo" class="w-8 h-8">
-                </a>
-                <span class="text-white font-bold text-lg">Chiêm Tinh Vui</span>
-            </div>
+            <div class="flex items-center space-x-2">
+      <img 
+        src="{{ $siteLogo ?? asset('image/icon.png') }}" 
+        alt="Logo" 
+        class="h-10 w-10 rounded-full"
+      >
+      <h1 class="text-2xl font-bold text-white">
+        {{ $siteName ?? 'Chiêm Tinh Vui' }}
+      </h1>
+    </div>
 
             {{-- Menu chính --}}
             <div class="hidden sm:flex items-center space-x-6 text-white text-sm font-medium">
@@ -19,9 +23,6 @@
                 </x-nav-link>
                 <x-nav-link :href="route('chart')" class="text-white hover:text-pink-300">
                     Bản đồ sao
-                </x-nav-link>
-                <x-nav-link :href="route('dream')" class="text-white hover:text-pink-300">
-                    Giấc mơ
                 </x-nav-link>
             </div>
 
@@ -74,9 +75,6 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('chart')">
                 Bản đồ sao
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dream')">
-                Giấc mơ
             </x-responsive-nav-link>
         </div>
 

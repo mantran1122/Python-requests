@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 py-12 px-4 text-white flex flex-col items-center">
+<div class="min-h-screen bg-gradient-to-br from-purple-200 to-indigo-900 py-12 px-4 text-black flex flex-col items-center">
 
     <h2 class="text-3xl font-bold text-center mb-8">💬 Trò chuyện với AI Chiêm Tinh</h2>
 
@@ -39,7 +39,7 @@
     {{-- Khung chat + nhập câu hỏi --}}
     <div class="flex flex-col w-full max-w-4xl space-y-4">
         <div id="chatBox" class="flex-1 min-h-[300px] max-h-[500px] overflow-y-auto bg-[#1E1E2F] rounded-xl p-6 text-sm space-y-4">
-            <div class="text-gray-400 italic">🪐 Hãy hỏi bất kỳ điều gì liên quan đến bản đồ sao của bạn...</div>
+            <div class="text-white italic">🪐 Hãy hỏi bất kỳ điều gì liên quan đến bản đồ sao của bạn...</div>
         </div>
 
         <div class="flex gap-2">
@@ -84,6 +84,21 @@
         display: flex;
         flex-direction: column;
     }
+
+    /* Loader dots */
+    @keyframes typing {
+        0% { content: ''; }
+        33% { content: '.'; }
+        66% { content: '..'; }
+        100% { content: '...'; }
+    }
+
+    .chat-loader .chat-bubble::after {
+        content: '';
+        display: inline-block;
+        width: 1.5em;
+        animation: typing 1s infinite steps(3,end);
+    }
 </style>
 
 {{-- Javascript --}}
@@ -94,6 +109,7 @@
 
         const chatBox = document.getElementById("chatBox");
 
+        // 1) User message
         const userMsg = document.createElement('div');
         userMsg.className = 'chat-message';
         userMsg.innerHTML = `<div class="chat-bubble chat-user"><strong>Bạn:</strong> ${msg}</div>`;
@@ -102,6 +118,14 @@
         document.getElementById("message").value = '';
         chatBox.scrollTop = chatBox.scrollHeight;
 
+        // 2) Loader
+        const loader = document.createElement('div');
+        loader.className = 'chat-message chat-loader';
+        loader.innerHTML = `<div class="chat-bubble chat-ai"><strong>AI:</strong> </div>`;
+        chatBox.appendChild(loader);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // 3) Fetch
         fetch("{{ url('/chart/chat') }}", {
             method: "POST",
             headers: {
@@ -112,34 +136,39 @@
         })
         .then(async res => {
             const text = await res.text();
+            // remove loader
+            loader.remove();
+
             try {
                 const data = JSON.parse(text);
-                const cleanReply = data.reply.replace(/\*\*/g, ''); // 🔥 Xóa dấu **
+                const cleanReply = data.reply.replace(/\*\*/g, '');
                 const aiMsg = document.createElement('div');
                 aiMsg.className = 'chat-message';
                 aiMsg.innerHTML = `<div class="chat-bubble chat-ai"><strong>AI:</strong> ${cleanReply}</div>`;
                 chatBox.appendChild(aiMsg);
-                chatBox.scrollTop = chatBox.scrollHeight;
             } catch (e) {
                 const errMsg = document.createElement('div');
-                errMsg.className = 'text-red-400 text-sm whitespace-pre-wrap';
-                errMsg.innerHTML = `❌ Server trả về lỗi hoặc HTML không hợp lệ:<br><pre>${text}</pre>`;
+                errMsg.className = 'chat-message';
+                errMsg.innerHTML = `<div class="chat-bubble chat-ai text-red-500 whitespace-pre-wrap">❌ Phản hồi không hợp lệ:<br><pre>${text}</pre></div>`;
                 chatBox.appendChild(errMsg);
-                chatBox.scrollTop = chatBox.scrollHeight;
             }
+            chatBox.scrollTop = chatBox.scrollHeight;
         })
         .catch(err => {
+            loader.remove();
             const errMsg = document.createElement('div');
-            errMsg.className = 'text-red-400';
-            errMsg.textContent = `❌ Lỗi kết nối: ${err}`;
+            errMsg.className = 'chat-message';
+            errMsg.innerHTML = `<div class="chat-bubble chat-ai text-red-500">❌ Kết nối thất bại: ${err.message}</div>`;
             chatBox.appendChild(errMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
         });
     }
 
     function suggest(text) {
         const input = document.getElementById('message');
         input.value = text;
-        sendMessage(); // 👉🏻 Gửi luôn câu hỏi gợi ý
+        sendMessage();
     }
 </script>
+
 @endsection

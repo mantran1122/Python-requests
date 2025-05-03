@@ -21,6 +21,7 @@ export default {
         muted: '#64748B', // Text mờ
         background: '#1E1B4B', // Nền tím đậm
         card: '#312E81', // Card tím trung bình
+        gray: '#9B9B9B',
         indigo: {
           500: '#6366F1',
           600: '#4F46E5',

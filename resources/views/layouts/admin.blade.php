@@ -2,26 +2,23 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>@yield('title', 'Chiêm Tinh Vui - Admin')</title>
+
+
 
     {{-- Icon + Font --}}
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('image/icon.png') }}">
+    <title>{{ $siteName ?? 'Chiêm Tinh Vui' }} | Admin</title>
+    <link rel="icon" href="{{ $siteLogo ?? asset('image/icon.png') }}" type="image/png" sizes="32x32">
+
     <link rel="apple-touch-icon" href="{{ asset('image/icon.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     {{-- Tailwind & Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <style>
-        body {
-            background: linear-gradient(to bottom right, #5b21b6, #312e81); /* Tím → xanh đậm */
-            min-height: 100vh;
-            color: white;
-        }
-    </style>
+    {{-- Remove inline gradient styling --}}
 </head>
 
-<body class="flex">
+<body class="flex bg-gray-900 text-gray-200 min-h-screen">
 
     {{-- Sidebar --}}
     @include('layouts.sidebar')

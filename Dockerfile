@@ -1,32 +1,30 @@
-# Sử dụng image PHP CLI vì bạn chạy artisan serve
 FROM php:8.2-cli
 
-# Cài các extension cần thiết cho Laravel
+# PHP extensions
 RUN apt-get update && apt-get install -y \
-    unzip \
-    git \
-    curl \
-    libzip-dev \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    python3 \
-    python3-pip \
-    zip \
-    gnupg \
-    ca-certificates \
-    lsb-release \
+    unzip git curl libzip-dev libpng-dev libonig-dev libxml2-dev \
+    python3 python3-pip zip gnupg ca-certificates lsb-release \
     && docker-php-ext-install pdo_mysql mbstring zip
 
-# ✨ Cài Python packages kèm --break-system-packages để tránh lỗi
+# Composer
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer
+
+# Python packages
 RUN pip3 install --break-system-packages requests matplotlib numpy openai
 
-# Cài Node.js + npm (phiên bản ổn định)
+# Node.js & npm
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
-# Kiểm tra phiên bản để xác nhận cài thành công
-RUN node -v && npm -v
-
-# Thư mục làm việc
+# Workdir & copy app
 WORKDIR /var/www
+COPY . /var/www
+
+# Install PHP + JS dependencies
+RUN composer install --no-interaction --optimize-autoloader \
+    && npm install && npm run build
+
+# Expose và CMD
+EXPOSE 8000
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
